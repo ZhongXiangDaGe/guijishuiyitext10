@@ -17,10 +17,10 @@ default:
   min_lr: 1e-5
 
   n_bits: 512
-  lambda_w: 0.15
-  lambda_w_warmup_epochs: 40
-  lambda_w_ramp_epochs: 40
-  beta: 0.05
+  lambda_w: 0.10
+  lambda_w_warmup_epochs: 50
+  lambda_w_ramp_epochs: 50
+  beta: 0.03
   eta_G: 0.9
   DP_sigma: 1e-4
 

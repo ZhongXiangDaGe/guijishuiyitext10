@@ -773,16 +773,21 @@ def parse_args():
     return p.parse_args()
 
 
-def load_config(path=None) -> Dict[str, Any]:
+def load_config(path=None) -> Tuple[Dict[str, Any], Optional[str]]:
     cfg = dict(DEFAULT_CFG)
-    if path and os.path.exists(path):
-        with open(path, "r", encoding="utf-8") as f:
-            user = yaml.safe_load(f)
-            if isinstance(user, dict) and "default" in user:
-                user = user["default"]
-            if isinstance(user, dict):
-                cfg.update(user)
-    return cfg
+    loaded_path = None
+    if path:
+        if os.path.exists(path):
+            loaded_path = path
+            with open(path, "r", encoding="utf-8") as f:
+                user = yaml.safe_load(f)
+                if isinstance(user, dict) and "default" in user:
+                    user = user["default"]
+                if isinstance(user, dict):
+                    cfg.update(user)
+        else:
+            print(f"[config] warning: config file not found: {path}. Using defaults.")
+    return cfg, loaded_path
 
 
 def demo_run():
@@ -815,11 +820,24 @@ def demo_run():
 
 def main():
     args = parse_args()
-    cfg = load_config(args.config)
+    cfg, loaded_path = load_config(args.config)
     if args.seed is not None:
         cfg["seed"] = int(args.seed)
     if args.device is not None:
         cfg["device"] = str(args.device)
+
+    if loaded_path:
+        print(f"[config] loaded from: {loaded_path}")
+    elif args.config is None:
+        print("[config] using defaults (no --config provided).")
+
+    print("[config] final config:")
+    print(yaml.safe_dump(cfg, sort_keys=True, allow_unicode=True))
+    print(
+        "[config] watermark: "
+        f"enabled={bool(cfg.get('enable_watermark', True))}, "
+        f"apply_dp_noise={bool(cfg.get('apply_dp_noise', True))}"
+    )
 
     if args.cmd == "train" or args.cmd is None:
         print("Starting training (sharded, adaptive DP)...")
