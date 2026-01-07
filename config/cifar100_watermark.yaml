@@ -1,0 +1,28 @@
+default:
+  dataset: CIFAR100
+  dataset_root: ./data
+  model: resnet18
+  num_classes: 100
+  image_size: 32
+
+  shards: 4
+  epochs_per_shard: 100
+  batch_size: 128
+
+  optim: sgd
+  lr: 0.1
+  momentum: 0.9
+  weight_decay: 5e-4
+  sched: cosine
+  min_lr: 1e-5
+
+  n_bits: 512
+  lambda_w: 0.10
+  lambda_w_warmup_epochs: 50
+  lambda_w_ramp_epochs: 50
+  beta: 0.03
+  eta_G: 0.9
+  DP_sigma: 1e-4
+
+  enable_watermark: true
+  apply_dp_noise: true

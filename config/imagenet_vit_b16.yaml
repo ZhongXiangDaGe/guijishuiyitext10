@@ -1,0 +1,24 @@
+default:
+  dataset: ImageNet
+  dataset_root: ./data
+  model: vit_b_16
+  num_classes: 1000
+  image_size: 224
+
+  shards: 4
+  epochs_per_shard: 40
+  batch_size: 128
+
+  optim: adam
+  lr: 0.0005
+  weight_decay: 0.05
+  sched: cosine
+  min_lr: 1e-6
+
+  n_bits: 512
+  lambda_w: 0.15
+  lambda_w_warmup_epochs: 10
+  lambda_w_ramp_epochs: 10
+  beta: 0.04
+  eta_G: 0.9
+  DP_sigma: 5e-5
